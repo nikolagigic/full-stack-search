@@ -1,4 +1,4 @@
-import type { AccomodationsResponse } from "@utils/type-generator";
+import type { AccomodationsResponse } from "@/utils/type-generator";
 
 interface SearchlistProps {
   hotels?: AccomodationsResponse["hotels"];

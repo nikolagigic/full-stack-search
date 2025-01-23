@@ -26,8 +26,7 @@
     /* Alias paths */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@utils/*": ["utils/*"]
+      "@/*": ["src/*"]
     }
   },
   "include": ["src", "utils", "vitest.setup.ts", "../api/db"]

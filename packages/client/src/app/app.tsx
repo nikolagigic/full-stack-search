@@ -1,21 +1,7 @@
 import { useState, type ChangeEvent } from "react";
-import { getCodeSandboxHost } from "@codesandbox/utils";
-import { AccomodationsResponse } from "@utils/type-generator";
-import { SearchList } from "./components";
-
-const codeSandboxHost = getCodeSandboxHost(3001);
-const API_URL = codeSandboxHost
-  ? `https://${codeSandboxHost}`
-  : "http://localhost:3001";
-
-const fetchAndFilterHotels = async (value: string) => {
-  const accomodationsData = await fetch(
-    `${API_URL}/accomodations?search=${value}`
-  );
-  const accomodations =
-    (await accomodationsData.json()) as AccomodationsResponse;
-  return accomodations;
-};
+import { AccomodationsResponse } from "@/utils/type-generator";
+import { SearchList } from "@/components";
+import { fetchAndFilterHotels } from "@/utils/fetchers/fetch-accomodations";
 
 function App() {
   const [accomodations, setAccomodations] = useState<AccomodationsResponse>();
