@@ -1,14 +1,15 @@
-import { useState, type ChangeEvent } from "react";
+import { useState, useCallback, type ChangeEvent } from "react";
 import { AccomodationsResponse } from "@/utils/type-generator";
 import { SearchList } from "@/components";
 import { fetchAndFilterHotels } from "@/utils/fetchers/fetch-accomodations";
+import useDebounce from "@/utils/hooks/useDebounce";
 
 function App() {
   const [accomodations, setAccomodations] = useState<AccomodationsResponse>();
   const [isSearching, setIsSearching] = useState(false);
 
-  const fetchData = async (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value === "") {
+  const fetchData = async (query: string) => {
+    if (query === "") {
       setAccomodations({
         cities: [],
         countries: [],
@@ -18,11 +19,20 @@ function App() {
       return;
     }
 
-    const filteredHotels = await fetchAndFilterHotels(event.target.value);
+    const filteredHotels = await fetchAndFilterHotels(query);
     console.log(filteredHotels);
     setIsSearching(true);
     setAccomodations(filteredHotels);
   };
+
+  const debouncedFetchData = useDebounce<string[]>(fetchData, 500);
+
+  const handleInputChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      debouncedFetchData(event.target.value);
+    },
+    [debouncedFetchData]
+  );
 
   return (
     <div className="App">
@@ -36,7 +46,7 @@ function App() {
                   type="text"
                   className="form-control form-input"
                   placeholder="Search accommodation..."
-                  onChange={fetchData}
+                  onChange={handleInputChange}
                 />
                 {isSearching && (
                   <span className="left-pan">
