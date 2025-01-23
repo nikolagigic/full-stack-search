@@ -80,8 +80,8 @@ When clicking on one of the `Hotels`, `Cities` or `Countries` links, the applica
 
 ### Limitations
 
-Given the time constraints, we do not expect a fully production-ready solution. We're primarily interested in the approach and the overall quality of the solution. 
-Feel free to modify the current codebase as needed, including adding or removing dependencies. 
+Given the time constraints, we do not expect a fully production-ready solution. We're primarily interested in the approach and the overall quality of the solution.
+Feel free to modify the current codebase as needed, including adding or removing dependencies.
 For larger or more time-intensive changes, you're welcome to outline your ideas in the write-up section below and discuss them further during the call.
 
 <img src="./assets/search-example.png" width="400px" />
@@ -90,7 +90,19 @@ For larger or more time-intensive changes, you're welcome to outline your ideas 
 
 <!-- Write-up/conclusion section -->
 
-_When all the behaviour is implemented, feel free to add some observations or conclusions you like to share in the section_
+- The MongoDB client should not be initialized within an API route because it creates a new connection for every request, leading to significant performance overhead and exceeding connection limits. MongoDB is designed to reuse a single client instance with connection pooling for efficiency. Initializing the client globally or during app startup ensures optimal resource utilization and avoids memory leaks, especially in serverless environments.
+
+- In real world scenario we would ideally want to have schema and models which we can use for type bindings during fetching. I abstracted the types of Hotels, Countries and Cities and created a "type-generator" on the client side to mock the behaviour of codegens and ensure type safety.
+
+- I implemented custom in-memory caching on the backend side for findMany queries as MongoDB does not support it out of the box. Implementing any other caching 3rd party service like Redis might be a hussle to set-up on the reviewers side, hence the custom solution. Another thing I would consider is queuing if I was to look out for scalability. Not needed for the purpose of this demo.
+
+- Custom debouncing is implemented on the front-end side so not every character change is triggering a side-effect.
+
+- Loaders are used so we make sure data is ready before the page renders as this is key information that will be presented on the page. Loaders are cached by default which is also a plus for our use case.
+
+- I tried implementing infinite scrolling but due to the nature of data and how the initial presentation of the data within scroll component and data structure has be setup it was difficult to work with it and setup headings in places while keeping the loadMore intersections working. Another way to go around this that I thinked of is instead of headings I would use other types of accomodation visualisation, like icons at the end of the name. Also, mongodb restrictions with relationships would insist on artificial foreign keys to perform true joins and get the true number of asked items rather then fetching the number of items from each collection. This was also a key factor in infinite scrolling implementation. It is possible but can be time consuming.
+
+- MongoDB might not be the best option in our usecase as we could use more read-heavy optimised engines we find in relational databases where we can create indexes and decrease the txs computation time, implement relationships and use joins.
 
 ### Database structure
 

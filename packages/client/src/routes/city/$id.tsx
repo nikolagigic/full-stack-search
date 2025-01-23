@@ -1,16 +1,16 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { fetchCity } from "@/utils/fetchers/fetch-accomodations";
+import { createFileRoute } from '@tanstack/react-router'
+import { fetchCity } from '@/utils/fetchers/fetch-accomodations'
 
-export const Route = createFileRoute("/city/$id")({
+export const Route = createFileRoute('/city/$id')({
   component: RouteComponent,
   loader: async ({ params: { id } }) => {
-    const city = await fetchCity(id);
-    return { city };
+    const city = await fetchCity(id)
+    return { city }
   },
-});
+})
 
 function RouteComponent() {
-  const { city } = Route.useLoaderData();
+  const { city } = Route.useLoaderData()
 
   return (
     <div className="accomodation-page">
@@ -18,5 +18,5 @@ function RouteComponent() {
         <h1>{city.name}</h1>
       </div>
     </div>
-  );
+  )
 }
