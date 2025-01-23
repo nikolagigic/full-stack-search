@@ -6,20 +6,10 @@ import useDebounce from "@/utils/hooks/useDebounce";
 
 function App() {
   const [accomodations, setAccomodations] =
-    useState<AccomodationsResponse | null>();
+    useState<AccomodationsResponse | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const fetchData = async (query: string) => {
-    if (query === "") {
-      setAccomodations({
-        cities: [],
-        countries: [],
-        hotels: [],
-      });
-      setSearchQuery("");
-      return;
-    }
-
     const filteredHotels = await fetchAndFilterHotels(query);
     setAccomodations(filteredHotels);
   };
@@ -29,6 +19,12 @@ function App() {
   const handleInputChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
+      if (value === "") {
+        setAccomodations(null);
+        setSearchQuery("");
+        return;
+      }
+
       setSearchQuery(value);
       debouncedFetchData(value);
     },
@@ -63,11 +59,11 @@ function App() {
                   </span>
                 )}
               </div>
-              {searchQuery && (
+              {accomodations && (
                 <SearchList
-                  cities={accomodations?.cities}
-                  countries={accomodations?.countries}
-                  hotels={accomodations?.hotels}
+                  cities={accomodations.cities}
+                  countries={accomodations.countries}
+                  hotels={accomodations.hotels}
                 />
               )}
             </div>
