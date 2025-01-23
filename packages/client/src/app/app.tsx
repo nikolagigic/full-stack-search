@@ -5,8 +5,9 @@ import { fetchAndFilterHotels } from "@/utils/fetchers/fetch-accomodations";
 import useDebounce from "@/utils/hooks/useDebounce";
 
 function App() {
-  const [accomodations, setAccomodations] = useState<AccomodationsResponse>();
-  const [isSearching, setIsSearching] = useState(false);
+  const [accomodations, setAccomodations] =
+    useState<AccomodationsResponse | null>();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchData = async (query: string) => {
     if (query === "") {
@@ -15,13 +16,11 @@ function App() {
         countries: [],
         hotels: [],
       });
-      setIsSearching(false);
+      setSearchQuery("");
       return;
     }
 
     const filteredHotels = await fetchAndFilterHotels(query);
-    console.log(filteredHotels);
-    setIsSearching(true);
     setAccomodations(filteredHotels);
   };
 
@@ -29,10 +28,17 @@ function App() {
 
   const handleInputChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      debouncedFetchData(event.target.value);
+      const value = event.target.value;
+      setSearchQuery(value);
+      debouncedFetchData(value);
     },
     [debouncedFetchData]
   );
+
+  const onClear = () => {
+    setSearchQuery("");
+    setAccomodations(null);
+  };
 
   return (
     <div className="App">
@@ -46,15 +52,18 @@ function App() {
                   type="text"
                   className="form-control form-input"
                   placeholder="Search accommodation..."
+                  value={searchQuery}
                   onChange={handleInputChange}
                 />
-                {isSearching && (
+                {searchQuery && (
                   <span className="left-pan">
-                    <i className="fa fa-close"></i>
+                    <button onClick={onClear}>
+                      <i className="fa fa-close"></i>
+                    </button>
                   </span>
                 )}
               </div>
-              {isSearching && (
+              {searchQuery && (
                 <SearchList
                   cities={accomodations?.cities}
                   countries={accomodations?.countries}

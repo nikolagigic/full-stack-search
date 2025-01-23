@@ -15,6 +15,9 @@ app.use(express.json());
 
 app.get("/accomodations", async (req, res) => {
   const search = typeof req.query.search === "string" ? req.query.search : "";
+  if (search.length < 3) {
+    return;
+  }
 
   const data = await getAccomodations(search);
 
