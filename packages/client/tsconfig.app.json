@@ -21,7 +21,14 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* Alias paths */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@utils/*": ["utils/*"]
+    }
   },
-  "include": ["src", "vitest.setup.ts"]
+  "include": ["src", "utils", "vitest.setup.ts", "../api/db"]
 }

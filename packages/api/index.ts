@@ -1,7 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import mongoClient from "utils/mongo-client";
+import { getAccomodations } from "utils/fetchers";
 
 dotenv.config();
 
@@ -13,10 +13,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/hotels", async (req, res) => {
-  const db = mongoClient.db();
-  const collection = db.collection("hotels");
-  res.send(await collection.find().toArray());
+app.get("/accomodations", async (req, res) => {
+  const search = typeof req.query.search === "string" ? req.query.search : "";
+
+  const data = await getAccomodations(search);
+
+  res.send(data);
 });
 
 app.listen(PORT, () => {
