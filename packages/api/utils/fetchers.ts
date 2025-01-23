@@ -1,4 +1,4 @@
-import mongoClient from "utils/mongo-client";
+import mongoClient, { MongoClientSingleton } from "utils/mongo-client";
 import { Filter, Document } from "mongodb";
 import type { AccomodationsResponse } from "db/types";
 
@@ -30,10 +30,31 @@ export const getAccomodations = async (
     citiesQuery.$or = [{ name: searchRegex }];
   }
 
+  const hotelsCacheKey = `hotels-${search}`;
+  const countriesCacheKey = `countries-${search}`;
+  const citiesCacheKey = `cities-${search}`;
   const [hotels, countries, cities] = await Promise.all([
-    hotelsCollection.find(hotelsQuery).toArray(),
-    countriesCollection.find(countriesQuery).toArray(),
-    citiesCollection.find(citiesQuery).toArray(),
+    await MongoClientSingleton.cachedQuery(
+      "hotels",
+      hotelsQuery,
+      {},
+      hotelsCacheKey,
+      30000
+    ),
+    await MongoClientSingleton.cachedQuery(
+      "countries",
+      countriesQuery,
+      {},
+      countriesCacheKey,
+      30000
+    ),
+    await MongoClientSingleton.cachedQuery(
+      "cities",
+      citiesQuery,
+      {},
+      citiesCacheKey,
+      30000
+    ),
   ]);
 
   const formattedResponse = {
