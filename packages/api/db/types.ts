@@ -26,4 +26,6 @@ export type AccomodationsResponse = {
   hotels: WithId<Document | Hotel>[];
   cities: WithId<Document | City>[];
   countries: WithId<Document | Country>[];
+  currentPage?: number;
+  totalPages?: number;
 };

@@ -23,7 +23,6 @@ export default function useDebounce<Args extends unknown[]>(
   };
 
   useEffect(() => {
-    // Cleanup on unmount
     return () => {
       if (debounceTimer.current) {
         clearTimeout(debounceTimer.current);
