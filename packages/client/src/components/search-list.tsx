@@ -1,4 +1,5 @@
 import type { AccomodationsResponse } from "@/utils/type-generator";
+import { Link } from "@tanstack/react-router";
 
 interface SearchlistProps {
   hotels?: AccomodationsResponse["hotels"];
@@ -29,10 +30,14 @@ export default function SearchList({
           ) : (
             hotels!.map((hotel, i) => (
               <li key={i}>
-                <a href={`/hotels/${hotel._id}`} className="dropdown-item">
+                <Link
+                  to={`/hotel/$id`}
+                  params={{ id: hotel._id.toString() }}
+                  className="dropdown-item"
+                >
                   <i className="fa fa-building mr-2"></i>
                   {hotel.hotel_name}
-                </a>
+                </Link>
                 <hr className="divider" />
               </li>
             ))
@@ -43,10 +48,14 @@ export default function SearchList({
           ) : (
             countries!.map((country, i) => (
               <li key={i}>
-                <a href={`/countries/${country._id}`} className="dropdown-item">
+                <Link
+                  to={`/country/$id`}
+                  params={{ id: country._id.toString() }}
+                  className="dropdown-item"
+                >
                   <i className="fa fa-building mr-2"></i>
                   {country.country}
-                </a>
+                </Link>
                 <hr className="divider" />
               </li>
             ))
@@ -57,10 +66,14 @@ export default function SearchList({
           ) : (
             cities!.map((city, i) => (
               <li key={i}>
-                <a href={`/cities/${city._id}`} className="dropdown-item">
+                <Link
+                  to={`/city/$id`}
+                  params={{ id: city._id.toString() }}
+                  className="dropdown-item"
+                >
                   <i className="fa fa-building mr-2"></i>
                   {city.name}
-                </a>
+                </Link>
                 <hr className="divider" />
               </li>
             ))

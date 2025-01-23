@@ -1,10 +1,15 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { useState, useCallback, type ChangeEvent } from "react";
 import { AccomodationsResponse } from "@/utils/type-generator";
 import { SearchList } from "@/components";
 import { fetchAndFilterHotels } from "@/utils/fetchers/fetch-accomodations";
 import useDebounce from "@/utils/hooks/useDebounce";
 
-function App() {
+export const Route = createFileRoute("/")({
+  component: RouteComponent,
+});
+
+function RouteComponent() {
   const [accomodations, setAccomodations] =
     useState<AccomodationsResponse | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -73,5 +78,3 @@ function App() {
     </div>
   );
 }
-
-export default App;

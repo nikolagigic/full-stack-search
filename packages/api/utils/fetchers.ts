@@ -1,15 +1,10 @@
 import mongoClient, { MongoClientSingleton } from "utils/mongo-client";
-import { Filter, Document } from "mongodb";
+import { Filter, Document, ObjectId, WithId } from "mongodb";
 import type { AccomodationsResponse } from "db/types";
 
 export const getAccomodations = async (
   search: string
 ): Promise<AccomodationsResponse> => {
-  const db = mongoClient.db();
-  const hotelsCollection = db.collection("hotels");
-  const countriesCollection = db.collection("countries");
-  const citiesCollection = db.collection("cities");
-
   const hotelsQuery: Filter<Document | AccomodationsResponse["hotels"]> = {};
   const countriesQuery: Filter<Document | AccomodationsResponse["countries"]> =
     {};
@@ -64,4 +59,28 @@ export const getAccomodations = async (
   };
 
   return formattedResponse;
+};
+
+export const getHotelById = async (id?: string) => {
+  const db = mongoClient.db();
+  const hotels = db.collection("hotels");
+  const hotel = await hotels.findOne({ _id: new ObjectId(id) });
+
+  return hotel;
+};
+
+export const getCountryById = async (id?: string) => {
+  const db = mongoClient.db();
+  const countries = db.collection("countries");
+  const country = await countries.findOne({ _id: new ObjectId(id) });
+
+  return country;
+};
+
+export const getCityById = async (id?: string) => {
+  const db = mongoClient.db();
+  const cities = db.collection("cities");
+  const city = await cities.findOne({ _id: new ObjectId(id) });
+
+  return city;
 };

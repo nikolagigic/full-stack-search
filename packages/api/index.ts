@@ -1,7 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import { getAccomodations } from "utils/fetchers";
+import {
+  getAccomodations,
+  getCityById,
+  getCountryById,
+  getHotelById,
+} from "utils/fetchers";
 
 dotenv.config();
 
@@ -20,6 +25,42 @@ app.get("/accomodations", async (req, res) => {
   }
 
   const data = await getAccomodations(search);
+
+  res.send(data);
+});
+
+app.get("/country/:id", async (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    res.status(400).send("Invalid ID");
+    return;
+  }
+
+  const data = await getCountryById(id);
+
+  res.send(data);
+});
+
+app.get("/city/:id", async (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    res.status(400).send("Invalid ID");
+    return;
+  }
+
+  const data = await getCityById(id);
+
+  res.send(data);
+});
+
+app.get("/hotel/:id", async (req, res) => {
+  const id = req.params.id;
+  if (!id) {
+    res.status(400).send("Invalid ID");
+    return;
+  }
+
+  const data = await getHotelById(id);
 
   res.send(data);
 });
